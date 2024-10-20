@@ -457,15 +457,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlchunhuidemortree8156eb05f41cefbf5777a34fc771fd08b8c8e758targetblank8156eb0a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlchunhuidemortreeca92f4c70be39a321d117e2cedfa9476279bdb7dtargetblankca92f4ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/lchunhui/demor/tree/8156eb05f41cefbf5777a34fc771fd08b8c8e758" target="_blank">8156eb0</a>
+<a href="https://github.com/lchunhui/demor/tree/ca92f4c70be39a321d117e2cedfa9476279bdb7d" target="_blank">ca92f4c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomlchunhuidemortree8156eb05f41cefbf5777a34fc771fd08b8c8e758targetblank8156eb0a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomlchunhuidemortreeca92f4c70be39a321d117e2cedfa9476279bdb7dtargetblankca92f4ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -475,7 +475,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/lchunhui/demor/tree/8156eb05f41cefbf5777a34fc771fd08b8c8e758" target="_blank">8156eb0</a>.
+<a href="https://github.com/lchunhui/demor/tree/ca92f4c70be39a321d117e2cedfa9476279bdb7d" target="_blank">ca92f4c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -539,6 +539,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/lchunhui/demor/blob/ca92f4c70be39a321d117e2cedfa9476279bdb7d/analysis/table1.Rmd" target="_blank">ca92f4c</a>
+</td>
+<td>
+Chun-Hui Lin
+</td>
+<td>
+2024-10-20
+</td>
+<td>
+Update the table1 file.
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/lchunhui/demor/59d5353bf59a97a266534c4f817355b02a78f07c/docs/table1.html" target="_blank">59d5353</a>
+</td>
+<td>
+Chun-Hui Lin
+</td>
+<td>
+2024-10-20
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/lchunhui/demor/blob/8156eb05f41cefbf5777a34fc771fd08b8c8e758/analysis/table1.Rmd" target="_blank">8156eb0</a>
 </td>
 <td>
@@ -564,14 +598,22 @@ tutorial, setup and detail of example data set are described in the
 link:</p>
 <ul>
 <li><p>Some setups depend on personal preferences or data distributions.
-You can modify them based on your own data set.</p></li>
+You can modify them based on your own data set. Things you might want to
+take into considerations are the following:</p>
+<ul>
+<li>Continuous variables: if violating normality assumption, no need to
+specify <strong>Mean (SD)</strong> and <strong>t-test</strong>. Median
+(IQR) and Wilcoxon rank sum test are shown by default.</li>
+<li>Categorical variables: if any expected cell counts less than 5,
+Fisher’s exact test is performed by default.</li>
+</ul></li>
 <li><p><code>tbl_summary()</code></p>
 <ul>
 <li><code>by=</code> argument: summary statistics split by treatment
 group.</li>
 <li><code>label=</code> argument: specify variables labels.</li>
 <li><code>statistic=</code> argument: specify <strong>Mean (SD)</strong>
-to display for age.</li>
+to display for patient age.</li>
 <li><code>digits=</code> argument: mean/median and SD/IQR round to 1
 decimal place; n rounds to 0 decimal place and % rounds to 1 decimal
 place.</li>
@@ -581,22 +623,24 @@ observations.</li>
 <li><p><code>add_p()</code></p>
 <ul>
 <li><code>test=</code> argument: specify <strong>t-test</strong> to
-perform for age.</li>
+perform for patient age.</li>
 <li><code>pvalue_fun=</code> argument: p-values round to 2 digits.</li>
 </ul></li>
 </ul>
 <pre class="r"><code>trial %&gt;%
   tbl_summary(by = trt,
-              label = age ~ &#39;Age (years)&#39;,
+              label = age ~ &#39;Patient Age&#39;,
               statistic = age ~ &#39;{mean} ({sd})&#39;,
-              digits = list(all_continuous() ~ 1,
+              digits = list(all_continuous() ~ c(1, 1),
                             all_categorical() ~ c(0, 1)),
               missing_text = &#39;(Missing)&#39;) %&gt;%
-  add_overall() %&gt;% # add column with overall summary statistics
   add_p(test = age ~ &#39;t.test&#39;, 
         pvalue_fun = ~ style_pvalue(.x, digits = 2)) %&gt;% # add p-values
+  add_overall() %&gt;% # add column with overall summary statistics
   modify_header(label ~ &quot;&quot;) %&gt;% # remove default header text
-  bold_labels() # bold labels</code></pre>
+  modify_caption(&quot;**Table 1. Participant characteristics**&quot;) %&gt;% # modify table title
+  bold_labels() %&gt;% # bold labels
+  bold_p() # bold p-values if significant</code></pre>
 <div id="gyatkfslio" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#gyatkfslio table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -1038,6 +1082,7 @@ perform for age.</li>
 }
 </style>
 <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <caption><strong>Table 1. Participant characteristics</strong></caption>
   <thead>
     <tr class="gt_col_headings">
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id=""></th>
@@ -1048,7 +1093,7 @@ perform for age.</li>
     </tr>
   </thead>
   <tbody class="gt_table_body">
-    <tr><td headers="label" class="gt_row gt_left" style="font-weight: bold;">Age (years)</td>
+    <tr><td headers="label" class="gt_row gt_left" style="font-weight: bold;">Patient Age</td>
 <td headers="stat_0" class="gt_row gt_center">47.2 (14.3)</td>
 <td headers="stat_1" class="gt_row gt_center">47.0 (14.7)</td>
 <td headers="stat_2" class="gt_row gt_center">47.4 (14.0)</td>
