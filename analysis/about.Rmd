@@ -7,4 +7,4 @@ editor_options:
   chunk_output_type: console
 ---
 
-Describe your project.
+I’m recording my R codes here so that they are easier for me to code efficiently and ensure reproducibility. With any luck, maybe they will be useful for the junior staff members.
