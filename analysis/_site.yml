@@ -1,7 +1,7 @@
-name: "demor"
+name: demor
 output_dir: ../docs
 navbar:
-  title: "demor"
+  title: demor
   left:
   - text: Home
     href: index.html
@@ -9,6 +9,10 @@ navbar:
     href: about.html
   - text: License
     href: license.html
+  right:
+  - icon: fab fa-github
+    text: Source code
+    href: https://github.com/lchunhui/demor
 output:
   workflowr::wflow_html:
     toc: yes
