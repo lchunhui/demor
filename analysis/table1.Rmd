@@ -5,6 +5,8 @@ date: "2024-10-20"
 output:
   workflowr::wflow_html:
     toc: false
+editor_options:
+  chunk_output_type: console
 ---
 
 Some notes on generating Table 1 from the  [tbl_summary()](https://www.danieldsjoberg.com/gtsummary/articles/tbl_summary.html) tutorial, setup and detail of example data set are described in the link: 

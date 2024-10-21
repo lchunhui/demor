@@ -1,0 +1,90 @@
+---
+title: "Regression"
+author: "Chun-Hui Lin"
+date: "2024-10-20"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+Some notes on generating regression tables from the  [tbl_regression()](https://www.danieldsjoberg.com/gtsummary/articles/tbl_regression.html) and the [finalfit()](https://finalfit.org/articles/all_tables_examples.html) tutorials, setup and detail of example data set are described in the link: 
+
+* Some setups depend on outcome types. You can modify them based on your own data set.
+
+  * Continuous outcomes: linear regression; if outcome is none-normally distributed, consider log-transformation. 
+  * Dichotomous outcomes: logistic regression; if outcome is very common (greater than 10%), consider poisson regression with robust error variances. 
+  * Time-to-event outcomes: Cox PH regression
+
+```{r, echo=FALSE}
+# install.packages('gtsummary'); install.packages('finalfit')
+library(gtsummary); library(finalfit); library(survival)
+```
+
+## gtsummary::tbl_regression()
+
+* `tbl_regression()`
+
+  * `exponentiate=` argument: coefficient estimates exponentiate if `TRUE`.
+  * `estimate_fun=` argument: ratios round to specified digits.
+  
+### Linear Regression
+
+```{r}
+tbl_regression(lm(age ~ trt + grade, trial), 
+               estimate_fun = ~ style_sigfig(.x, digits = 2),
+               pvalue_fun = ~ style_pvalue(.x, digits = 2))
+```
+
+### Logistic Regression
+
+```{r}
+tbl_regression(glm(response ~ trt + age + grade, trial, family = 'binomial'), 
+               exponentiate = T,
+               estimate_fun = ~ style_ratio(.x, digits = 2),
+               pvalue_fun = ~ style_pvalue(.x, digits = 2))
+```
+
+### Cox PH Regression
+
+```{r}
+tbl_regression(coxph(Surv(ttdeath, death) ~ trt + age + grade, trial),
+               exponentiate = T,
+               estimate_fun = ~ style_ratio(.x, digits = 2),
+               pvalue_fun = ~ style_pvalue(.x, digits = 2))
+```
+
+## finalfit::finalfit()
+
+* `finalfit()`
+
+  * `metrics=` argument: include model metrics in output if `TRUE`.
+
+### Linear Regression
+
+```{r}
+trial %>% 
+  finalfit('age', c('trt', 'grade'), 
+           metrics = T) #equivalent: lmuni(), lmmulti()
+```
+
+### Logistic Regression
+
+```{r, echo=FALSE}
+trial$response.factor = factor(trial$response, labels = c('No', 'Yes'))
+```
+
+```{r}
+trial %>% 
+  finalfit('response.factor', c('trt', 'age', 'grade'), 
+           metrics = T) #equivalent: glmuni(), glmmulti()
+```
+
+### Cox PH Regression
+
+```{r}
+trial %>% 
+  finalfit('Surv(ttdeath, death)', c('trt', 'age', 'grade'), 
+           metrics = T) #equivalent: coxphuni(), coxphmulti()
+```
