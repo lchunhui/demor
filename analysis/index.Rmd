@@ -10,6 +10,13 @@ editor_options:
 
 My personal notes on R codes for daily work.
 
-Topics: 
+Basic Topics: 
 
 * [Table 1](table1.html)
+* [Regression](regression.html)
+
+Advanced Topics: 
+
+* `twangContinuous`
+* `BioAge`
+
