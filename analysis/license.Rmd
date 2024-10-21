@@ -8,7 +8,7 @@ editor_options:
 ---
 
 The content on this site is available under the [CC-BY 4.0][cc-by] license.
-Briefly, this means you are free to reuse and remix this material, but you must
+In short, this means you are free to reuse and remix this material, but you must
 attribute this website.
 
 [cc-by]: https://creativecommons.org/licenses/by/4.0/
