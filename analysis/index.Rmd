@@ -8,7 +8,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-My personal notes on R codes for daily work.
+My personal notes on R codes for daily task as a biostatistician.
 
 Basic Topics: 
 

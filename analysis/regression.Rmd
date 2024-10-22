@@ -15,7 +15,7 @@ Some notes on generating regression tables from the  [tbl_regression()](https://
 
   * Continuous outcomes: linear regression; if outcome is none-normally distributed, consider log-transformation. 
   * Dichotomous outcomes: logistic regression; if outcome is very common (greater than 10%), consider poisson regression with robust error variances. 
-  * Time-to-event outcomes: Cox PH regression
+  * Time-to-event outcomes: Cox PH regression; if violating proportional hazards assumption, consider adding time interaction or stratification.
 
 ```{r, echo=FALSE}
 # install.packages('gtsummary'); install.packages('finalfit')
