@@ -536,15 +536,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlchunhuidemortreecbad0ab8088f401695a5a6f9cf7ba1b5d55d869ctargetblankcbad0aba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlchunhuidemortree3508acd4fabfeb8f151cf18dc9becdc4323625b8targetblank3508acda">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/lchunhui/demor/tree/cbad0ab8088f401695a5a6f9cf7ba1b5d55d869c" target="_blank">cbad0ab</a>
+<a href="https://github.com/lchunhui/demor/tree/3508acd4fabfeb8f151cf18dc9becdc4323625b8" target="_blank">3508acd</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomlchunhuidemortreecbad0ab8088f401695a5a6f9cf7ba1b5d55d869ctargetblankcbad0aba"
+id="strongRepositoryversionstrongahrefhttpsgithubcomlchunhuidemortree3508acd4fabfeb8f151cf18dc9becdc4323625b8targetblank3508acda"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -554,7 +554,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/lchunhui/demor/tree/cbad0ab8088f401695a5a6f9cf7ba1b5d55d869c" target="_blank">cbad0ab</a>.
+<a href="https://github.com/lchunhui/demor/tree/3508acd4fabfeb8f151cf18dc9becdc4323625b8" target="_blank">3508acd</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -620,7 +620,24 @@ Message
 Rmd
 </td>
 <td>
-<a href="https://github.com/lchunhui/demor/blob/cbad0ab8088f401695a5a6f9cf7ba1b5d55d869c/analysis/regression.Rmd" target="_blank">cbad0ab</a>
+<a href="https://github.com/lchunhui/demor/blob/3508acd4fabfeb8f151cf18dc9becdc4323625b8/analysis/regression.Rmd" target="_blank">3508acd</a>
+</td>
+<td>
+Chun-Hui Lin
+</td>
+<td>
+2024-10-21
+</td>
+<td>
+Update the regression file and the initial files for demor.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lchunhui/demor/blob/fd0100b04d1967c752d736e72111ad51201d7623/analysis/regression.Rmd" target="_blank">fd0100b</a>
 </td>
 <td>
 Chun-Hui Lin
@@ -630,6 +647,23 @@ Chun-Hui Lin
 </td>
 <td>
 Update the table1 file and add the regression file.
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/lchunhui/demor/5c2b4e10f6a9d0bd86fe20262f4e2818faea32a4/docs/regression.html" target="_blank">5c2b4e1</a>
+</td>
+<td>
+Chun-Hui Lin
+</td>
+<td>
+2024-10-21
+</td>
+<td>
+Build site.
 </td>
 </tr>
 </tbody>
@@ -656,7 +690,9 @@ distributed, consider log-transformation.</li>
 <li>Dichotomous outcomes: logistic regression; if outcome is very common
 (greater than 10%), consider poisson regression with robust error
 variances.</li>
-<li>Time-to-event outcomes: Cox PH regression</li>
+<li>Time-to-event outcomes: Cox PH regression; if violating proportional
+hazards assumption, consider adding time interaction or
+stratification.</li>
 </ul></li>
 </ul>
 </div>
