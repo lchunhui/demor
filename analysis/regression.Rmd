@@ -15,9 +15,9 @@ Some notes on generating regression tables from the  [tbl_regression()](https://
 
   * Continuous outcomes: linear regression; if outcome is non-normally distributed, consider log-transformation. 
   * Dichotomous outcomes: logistic regression; if outcome is very common (greater than 10%), consider poisson regression with robust error variances. 
-  * Time-to-event outcomes: Cox PH regression; if violating proportional hazards assumption, consider adding time interaction or stratification.
+  * Time-to-event outcomes: Cox PH regression; if violating proportional hazards assumption, consider adding interaction term or applying stratification.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 # install.packages('gtsummary'); install.packages('finalfit')
 library(gtsummary); library(finalfit); library(survival)
 ```
@@ -44,6 +44,24 @@ tbl_regression(glm(response ~ trt + age + grade, trial, family = 'binomial'),
                exponentiate = T,
                estimate_fun = ~ style_ratio(.x, digits = 2),
                pvalue_fun = ~ style_pvalue(.x, digits = 2))
+```
+
+### Poisson Regression
+
+* `coeftest()`
+
+  * `vcov=` argument: specify sandwich covariance matrix to obtain robust standard errors.
+
+```{r, warning=FALSE}
+tidy_robust(glm(response ~ trt + age + grade, trial, family = 'poisson'), 
+            exponentiate = T,
+            vcov = sandwich::sandwich,
+            estimate_fun = ~ style_ratio(.x, digits = 2),
+            pvalue_fun = ~ style_pvalue(.x, digits = 2)) %>%
+  remove_intercept() %>%
+  select(term, estimate, conf.low, conf.high, p.value) %>%
+  as.data.frame() %>%
+  condense_fit(estimate_name = "RR (robust SE)")
 ```
 
 ### Cox PH Regression
@@ -79,6 +97,20 @@ trial$response.factor = factor(trial$response, labels = c('No', 'Yes'))
 trial %>% 
   finalfit('response.factor', c('trt', 'age', 'grade'), 
            metrics = T) #equivalent: glmuni(), glmmulti()
+```
+
+### Poisson Regression
+
+```{r}
+trial %>% 
+  glmmulti('response', c('trt', 'age', 'grade'), family = poisson) %>%
+  lmtest::coeftest(., vcov = sandwich::sandwich) %>%
+  broom::tidy(conf.int = T) %>%
+  remove_intercept() %>%
+  select(term, estimate, conf.low, conf.high, p.value) %>%
+  dplyr::mutate_at(c('estimate', 'conf.low', 'conf.high'), exp) %>%
+  as.data.frame() %>%
+  condense_fit(estimate_name = "RR (robust SE)")
 ```
 
 ### Cox PH Regression
