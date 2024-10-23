@@ -7,8 +7,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-## Introduction
-
 Some notes on generating regression tables from the  [tbl_regression()](https://www.danieldsjoberg.com/gtsummary/articles/tbl_regression.html) and the [finalfit()](https://finalfit.org/articles/all_tables_examples.html) tutorials, setup and detail of example data set are described in the link: 
 
 * Some setups depend on outcome types. You can modify them based on your own data set.
