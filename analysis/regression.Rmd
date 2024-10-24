@@ -13,11 +13,11 @@ Some notes on generating regression tables from the  [tbl_regression()](https://
 
   * Continuous outcomes: linear regression; if outcome is non-normally distributed, consider log-transformation. 
   * Dichotomous outcomes: logistic regression; if outcome is very common (greater than 10%), consider poisson regression with robust error variances. 
-  * Time-to-event outcomes: Cox PH regression; if violating proportional hazards assumption, consider adding interaction term or applying stratification.
+  * Ordinal outcomes: multinomial logistic regression; if assuming proportional odds, conduct ordinal logistic regression.
 
 ```{r, echo=FALSE, warning=FALSE}
 # install.packages('gtsummary'); install.packages('finalfit')
-library(gtsummary); library(finalfit); library(survival)
+library(gtsummary); library(finalfit)
 ```
 
 ## gtsummary::tbl_regression()
@@ -62,15 +62,6 @@ tidy_robust(glm(response ~ trt + age + grade, trial, family = 'poisson'),
   condense_fit(estimate_name = "RR (robust SE)")
 ```
 
-### Cox PH Regression
-
-```{r}
-tbl_regression(coxph(Surv(ttdeath, death) ~ trt + age + grade, trial),
-               exponentiate = T,
-               estimate_fun = ~ style_ratio(.x, digits = 2),
-               pvalue_fun = ~ style_pvalue(.x, digits = 2))
-```
-
 ## finalfit::finalfit()
 
 * `finalfit()`
@@ -111,10 +102,29 @@ trial %>%
   condense_fit(estimate_name = "RR (robust SE)")
 ```
 
-### Cox PH Regression
+## Ordinal Outcome
+
+### Multinomial Logistic Regression
+
+```{r, echo=FALSE}
+trial$trt.factor = factor(trial$trt)
+```
 
 ```{r}
-trial %>% 
-  finalfit('Surv(ttdeath, death)', c('trt', 'age', 'grade'), 
-           metrics = T) #equivalent: coxphuni(), coxphmulti()
+tbl_regression(nnet::multinom(grade ~ trt.factor, trial), 
+               exponentiate = T, 
+               label = trt.factor ~ 'Chemotherapy Treatment',
+               estimate_fun = ~ style_ratio(.x, digits = 2),
+               pvalue_fun = ~ style_pvalue(.x, digits = 2))
+```
+
+### Ordinal Logistic Regression
+
+```{r}
+broom::tidy(MASS::polr(grade ~ trt.factor, trial, Hess = T), 
+            conf.int = T, exponentiate = T, p.values = T) %>%
+  dplyr::filter(coef.type == 'coefficient') %>%
+  select(term, estimate, conf.low, conf.high, p.value) %>%
+  as.data.frame() %>%
+  condense_fit(estimate_name = "OR")
 ```
