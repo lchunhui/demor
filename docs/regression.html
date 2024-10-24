@@ -536,15 +536,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlchunhuidemortreeeca7582474d14154fad0c86c40c392932ae0b32etargetblankeca7582a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomlchunhuidemortreebe434652e50696320c03669990ad71b31a6e3bf9targetblankbe43465a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/lchunhui/demor/tree/eca7582474d14154fad0c86c40c392932ae0b32e" target="_blank">eca7582</a>
+<a href="https://github.com/lchunhui/demor/tree/be434652e50696320c03669990ad71b31a6e3bf9" target="_blank">be43465</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomlchunhuidemortreeeca7582474d14154fad0c86c40c392932ae0b32etargetblankeca7582a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomlchunhuidemortreebe434652e50696320c03669990ad71b31a6e3bf9targetblankbe43465a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -554,7 +554,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/lchunhui/demor/tree/eca7582474d14154fad0c86c40c392932ae0b32e" target="_blank">eca7582</a>.
+<a href="https://github.com/lchunhui/demor/tree/be434652e50696320c03669990ad71b31a6e3bf9" target="_blank">be43465</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -571,6 +571,7 @@ were generated:
 Ignored files:
     Ignored:    .DS_Store
     Ignored:    .Rhistory
+    Ignored:    analysis/.Rhistory
 
 Untracked files:
     Untracked:  analysis/dplyr.Rmd
@@ -620,6 +621,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/lchunhui/demor/blob/be434652e50696320c03669990ad71b31a6e3bf9/analysis/regression.Rmd" target="_blank">be43465</a>
+</td>
+<td>
+Chun-Hui Lin
+</td>
+<td>
+2024-10-23
+</td>
+<td>
+Update the regression file.
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/lchunhui/demor/30a907453f5f764142964a2ec82f492755b78c15/docs/regression.html" target="_blank">30a9074</a>
+</td>
+<td>
+Chun-Hui Lin
+</td>
+<td>
+2024-10-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -795,9 +830,8 @@ distributed, consider log-transformation.</li>
 <li>Dichotomous outcomes: logistic regression; if outcome is very common
 (greater than 10%), consider poisson regression with robust error
 variances.</li>
-<li>Time-to-event outcomes: Cox PH regression; if violating proportional
-hazards assumption, consider adding interaction term or applying
-stratification.</li>
+<li>Ordinal outcomes: multinomial logistic regression; if assuming
+proportional odds, conduct ordinal logistic regression.</li>
 </ul></li>
 </ul>
 <div id="gtsummarytbl_regression" class="section level2">
@@ -1858,12 +1892,106 @@ obtain robust standard errors.</li>
 3     gradeII 0.90 (0.53-1.52, p=0.686)
 4    gradeIII 1.01 (0.61-1.66, p=0.982)</code></pre>
 </div>
-<div id="cox-ph-regression" class="section level3">
-<h3>Cox PH Regression</h3>
-<pre class="r"><code>tbl_regression(coxph(Surv(ttdeath, death) ~ trt + age + grade, trial),
-               exponentiate = T,
+</div>
+<div id="finalfitfinalfit" class="section level2">
+<h2>finalfit::finalfit()</h2>
+<ul>
+<li><p><code>finalfit()</code></p>
+<ul>
+<li><code>metrics=</code> argument: include model metrics in output if
+<code>TRUE</code>.</li>
+</ul></li>
+</ul>
+<div id="linear-regression-1" class="section level3">
+<h3>Linear Regression</h3>
+<pre class="r"><code>trial %&gt;% 
+  finalfit(&#39;age&#39;, c(&#39;trt&#39;, &#39;grade&#39;), 
+           metrics = T) #equivalent: lmuni(), lmmulti()</code></pre>
+<pre><code>Note: dependent includes missing data. These are dropped.</code></pre>
+<pre><code>[[1]]
+         Dependent: Age             unit       value
+ Chemotherapy Treatment Drug A Mean (sd) 47.0 (14.7)
+                        Drug B Mean (sd) 47.4 (14.0)
+                  Grade      I Mean (sd) 46.2 (15.2)
+                            II Mean (sd) 47.5 (13.7)
+                           III Mean (sd) 48.1 (14.1)
+     Coefficient (univariable)   Coefficient (multivariable)
+                             -                             -
+ 0.44 (-3.68 to 4.56, p=0.834) 0.39 (-3.75 to 4.52, p=0.854)
+                             -                             -
+ 1.38 (-3.63 to 6.39, p=0.587) 1.37 (-3.65 to 6.40, p=0.590)
+ 1.96 (-3.07 to 7.00, p=0.443) 1.95 (-3.10 to 7.00, p=0.448)
+
+[[2]]
+                                                                                                                                                        
+ Number in dataframe = 200, Number in model = 189, Missing = 11, Log-likelihood = -770.29, AIC = 1550.6, R-squared = 0.0036, Adjusted R-squared = -0.013</code></pre>
+</div>
+<div id="logistic-regression-1" class="section level3">
+<h3>Logistic Regression</h3>
+<pre class="r"><code>trial %&gt;% 
+  finalfit(&#39;response.factor&#39;, c(&#39;trt&#39;, &#39;age&#39;, &#39;grade&#39;), 
+           metrics = T) #equivalent: glmuni(), glmmulti()</code></pre>
+<pre><code>Note: dependent includes missing data. These are dropped.</code></pre>
+<pre><code>Waiting for profiling to be done...
+Waiting for profiling to be done...
+Waiting for profiling to be done...
+Waiting for profiling to be done...</code></pre>
+<pre><code>Setting levels: control = 0, case = 1</code></pre>
+<pre><code>Setting direction: controls &lt; cases</code></pre>
+<pre><code>[[1]]
+ Dependent: response.factor                    No         Yes
+     Chemotherapy Treatment    Drug A   67 (70.5)   28 (29.5)
+                               Drug B   65 (66.3)   33 (33.7)
+                        Age Mean (SD) 45.9 (14.4) 49.8 (14.2)
+                      Grade         I   46 (68.7)   21 (31.3)
+                                   II   44 (69.8)   19 (30.2)
+                                  III   42 (66.7)   21 (33.3)
+          OR (univariable)        OR (multivariable)
+                         -                         -
+ 1.21 (0.66-2.24, p=0.531) 1.13 (0.60-2.13, p=0.699)
+ 1.02 (1.00-1.04, p=0.095) 1.02 (1.00-1.04, p=0.095)
+                         -                         -
+ 0.95 (0.45-2.00, p=0.884) 0.85 (0.39-1.85, p=0.685)
+ 1.10 (0.52-2.29, p=0.808) 1.01 (0.47-2.15, p=0.984)
+
+[[2]]
+                                                                                                                                 
+ Number in dataframe = 200, Number in model = 183, Missing = 17, AIC = 235.3, C-statistic = 0.578, H&amp;L = Chi-sq(8) 3.53 (p=0.897)</code></pre>
+</div>
+<div id="poisson-regression-1" class="section level3">
+<h3>Poisson Regression</h3>
+<pre class="r"><code>trial %&gt;% 
+  glmmulti(&#39;response&#39;, c(&#39;trt&#39;, &#39;age&#39;, &#39;grade&#39;), family = poisson) %&gt;%
+  lmtest::coeftest(., vcov = sandwich::sandwich) %&gt;%
+  broom::tidy(conf.int = T) %&gt;%
+  remove_intercept() %&gt;%
+  select(term, estimate, conf.low, conf.high, p.value) %&gt;%
+  dplyr::mutate_at(c(&#39;estimate&#39;, &#39;conf.low&#39;, &#39;conf.high&#39;), exp) %&gt;%
+  as.data.frame() %&gt;%
+  condense_fit(estimate_name = &quot;RR (robust SE)&quot;)</code></pre>
+<pre><code>  explanatory            RR (robust SE)
+1   trtDrug B 1.09 (0.71-1.66, p=0.695)
+2         age 1.01 (1.00-1.03, p=0.089)
+3     gradeII 0.90 (0.53-1.52, p=0.686)
+4    gradeIII 1.01 (0.61-1.66, p=0.982)</code></pre>
+</div>
+</div>
+<div id="ordinal-outcome" class="section level2">
+<h2>Ordinal Outcome</h2>
+<div id="multinomial-logistic-regression" class="section level3">
+<h3>Multinomial Logistic Regression</h3>
+<pre class="r"><code>tbl_regression(nnet::multinom(grade ~ trt.factor, trial), 
+               exponentiate = T, 
+               label = trt.factor ~ &#39;Chemotherapy Treatment&#39;,
                estimate_fun = ~ style_ratio(.x, digits = 2),
                pvalue_fun = ~ style_pvalue(.x, digits = 2))</code></pre>
+<pre><code># weights:  9 (4 variable)
+initial  value 219.722458 
+final  value 219.503525 
+converged</code></pre>
+<pre><code>ℹ Multinomial models have a different underlying structure than the models
+gtsummary was designed for. Other gtsummary functions designed to work with
+tbl_regression objects may yield unexpected results.</code></pre>
 <div id="yeasywiixh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#yeasywiixh table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -2308,161 +2436,62 @@ obtain robust standard errors.</li>
   <thead>
     <tr class="gt_col_headings">
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Characteristic&lt;/strong&gt;"><strong>Characteristic</strong></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;HR&lt;/strong&gt;&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>HR</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;OR&lt;/strong&gt;&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>OR</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;95% CI&lt;/strong&gt;&lt;span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/span&gt;"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;p-value&lt;/strong&gt;"><strong>p-value</strong></th>
     </tr>
   </thead>
   <tbody class="gt_table_body">
-    <tr><td headers="label" class="gt_row gt_left">Chemotherapy Treatment</td>
-<td headers="estimate" class="gt_row gt_center"><br /></td>
-<td headers="ci" class="gt_row gt_center"><br /></td>
-<td headers="p.value" class="gt_row gt_center"><br /></td></tr>
-    <tr><td headers="label" class="gt_row gt_left">    Drug A</td>
-<td headers="estimate" class="gt_row gt_center">—</td>
-<td headers="ci" class="gt_row gt_center">—</td>
-<td headers="p.value" class="gt_row gt_center"><br /></td></tr>
-    <tr><td headers="label" class="gt_row gt_left">    Drug B</td>
-<td headers="estimate" class="gt_row gt_center">1.30</td>
-<td headers="ci" class="gt_row gt_center">0.88, 1.92</td>
-<td headers="p.value" class="gt_row gt_center">0.18</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">Age</td>
-<td headers="estimate" class="gt_row gt_center">1.01</td>
-<td headers="ci" class="gt_row gt_center">0.99, 1.02</td>
-<td headers="p.value" class="gt_row gt_center">0.35</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">Grade</td>
-<td headers="estimate" class="gt_row gt_center"><br /></td>
-<td headers="ci" class="gt_row gt_center"><br /></td>
-<td headers="p.value" class="gt_row gt_center"><br /></td></tr>
-    <tr><td headers="label" class="gt_row gt_left">    I</td>
-<td headers="estimate" class="gt_row gt_center">—</td>
-<td headers="ci" class="gt_row gt_center">—</td>
-<td headers="p.value" class="gt_row gt_center"><br /></td></tr>
-    <tr><td headers="label" class="gt_row gt_left">    II</td>
-<td headers="estimate" class="gt_row gt_center">1.21</td>
-<td headers="ci" class="gt_row gt_center">0.73, 1.99</td>
-<td headers="p.value" class="gt_row gt_center">0.46</td></tr>
-    <tr><td headers="label" class="gt_row gt_left">    III</td>
-<td headers="estimate" class="gt_row gt_center">1.79</td>
-<td headers="ci" class="gt_row gt_center">1.12, 2.86</td>
-<td headers="p.value" class="gt_row gt_center">0.014</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="4" class="gt_group_heading" scope="colgroup" id="II">II</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="II  label" class="gt_row gt_left">Chemotherapy Treatment</td>
+<td headers="II  estimate" class="gt_row gt_center"><br /></td>
+<td headers="II  ci" class="gt_row gt_center"><br /></td>
+<td headers="II  p.value" class="gt_row gt_center"><br /></td></tr>
+    <tr><td headers="II  label" class="gt_row gt_left">    Drug A</td>
+<td headers="II  estimate" class="gt_row gt_center">—</td>
+<td headers="II  ci" class="gt_row gt_center">—</td>
+<td headers="II  p.value" class="gt_row gt_center"><br /></td></tr>
+    <tr><td headers="II  label" class="gt_row gt_left">    Drug B</td>
+<td headers="II  estimate" class="gt_row gt_center">1.19</td>
+<td headers="II  ci" class="gt_row gt_center">0.61, 2.34</td>
+<td headers="II  p.value" class="gt_row gt_center">0.61</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="4" class="gt_group_heading" scope="colgroup" id="III">III</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="III  label" class="gt_row gt_left">Chemotherapy Treatment</td>
+<td headers="III  estimate" class="gt_row gt_center"><br /></td>
+<td headers="III  ci" class="gt_row gt_center"><br /></td>
+<td headers="III  p.value" class="gt_row gt_center"><br /></td></tr>
+    <tr><td headers="III  label" class="gt_row gt_left">    Drug A</td>
+<td headers="III  estimate" class="gt_row gt_center">—</td>
+<td headers="III  ci" class="gt_row gt_center">—</td>
+<td headers="III  p.value" class="gt_row gt_center"><br /></td></tr>
+    <tr><td headers="III  label" class="gt_row gt_left">    Drug B</td>
+<td headers="III  estimate" class="gt_row gt_center">1.13</td>
+<td headers="III  ci" class="gt_row gt_center">0.57, 2.24</td>
+<td headers="III  p.value" class="gt_row gt_center">0.73</td></tr>
   </tbody>
   
   <tfoot class="gt_footnotes">
     <tr>
-      <td class="gt_footnote" colspan="4"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> HR = Hazard Ratio, CI = Confidence Interval</td>
+      <td class="gt_footnote" colspan="4"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> OR = Odds Ratio, CI = Confidence Interval</td>
     </tr>
   </tfoot>
 </table>
 </div>
 </div>
-</div>
-<div id="finalfitfinalfit" class="section level2">
-<h2>finalfit::finalfit()</h2>
-<ul>
-<li><p><code>finalfit()</code></p>
-<ul>
-<li><code>metrics=</code> argument: include model metrics in output if
-<code>TRUE</code>.</li>
-</ul></li>
-</ul>
-<div id="linear-regression-1" class="section level3">
-<h3>Linear Regression</h3>
-<pre class="r"><code>trial %&gt;% 
-  finalfit(&#39;age&#39;, c(&#39;trt&#39;, &#39;grade&#39;), 
-           metrics = T) #equivalent: lmuni(), lmmulti()</code></pre>
-<pre><code>Note: dependent includes missing data. These are dropped.</code></pre>
-<pre><code>[[1]]
-         Dependent: Age             unit       value
- Chemotherapy Treatment Drug A Mean (sd) 47.0 (14.7)
-                        Drug B Mean (sd) 47.4 (14.0)
-                  Grade      I Mean (sd) 46.2 (15.2)
-                            II Mean (sd) 47.5 (13.7)
-                           III Mean (sd) 48.1 (14.1)
-     Coefficient (univariable)   Coefficient (multivariable)
-                             -                             -
- 0.44 (-3.68 to 4.56, p=0.834) 0.39 (-3.75 to 4.52, p=0.854)
-                             -                             -
- 1.38 (-3.63 to 6.39, p=0.587) 1.37 (-3.65 to 6.40, p=0.590)
- 1.96 (-3.07 to 7.00, p=0.443) 1.95 (-3.10 to 7.00, p=0.448)
-
-[[2]]
-                                                                                                                                                        
- Number in dataframe = 200, Number in model = 189, Missing = 11, Log-likelihood = -770.29, AIC = 1550.6, R-squared = 0.0036, Adjusted R-squared = -0.013</code></pre>
-</div>
-<div id="logistic-regression-1" class="section level3">
-<h3>Logistic Regression</h3>
-<pre class="r"><code>trial %&gt;% 
-  finalfit(&#39;response.factor&#39;, c(&#39;trt&#39;, &#39;age&#39;, &#39;grade&#39;), 
-           metrics = T) #equivalent: glmuni(), glmmulti()</code></pre>
-<pre><code>Note: dependent includes missing data. These are dropped.</code></pre>
-<pre><code>Waiting for profiling to be done...
-Waiting for profiling to be done...
-Waiting for profiling to be done...
-Waiting for profiling to be done...</code></pre>
-<pre><code>Setting levels: control = 0, case = 1</code></pre>
-<pre><code>Setting direction: controls &lt; cases</code></pre>
-<pre><code>[[1]]
- Dependent: response.factor                    No         Yes
-     Chemotherapy Treatment    Drug A   67 (70.5)   28 (29.5)
-                               Drug B   65 (66.3)   33 (33.7)
-                        Age Mean (SD) 45.9 (14.4) 49.8 (14.2)
-                      Grade         I   46 (68.7)   21 (31.3)
-                                   II   44 (69.8)   19 (30.2)
-                                  III   42 (66.7)   21 (33.3)
-          OR (univariable)        OR (multivariable)
-                         -                         -
- 1.21 (0.66-2.24, p=0.531) 1.13 (0.60-2.13, p=0.699)
- 1.02 (1.00-1.04, p=0.095) 1.02 (1.00-1.04, p=0.095)
-                         -                         -
- 0.95 (0.45-2.00, p=0.884) 0.85 (0.39-1.85, p=0.685)
- 1.10 (0.52-2.29, p=0.808) 1.01 (0.47-2.15, p=0.984)
-
-[[2]]
-                                                                                                                                 
- Number in dataframe = 200, Number in model = 183, Missing = 17, AIC = 235.3, C-statistic = 0.578, H&amp;L = Chi-sq(8) 3.53 (p=0.897)</code></pre>
-</div>
-<div id="poisson-regression-1" class="section level3">
-<h3>Poisson Regression</h3>
-<pre class="r"><code>trial %&gt;% 
-  glmmulti(&#39;response&#39;, c(&#39;trt&#39;, &#39;age&#39;, &#39;grade&#39;), family = poisson) %&gt;%
-  lmtest::coeftest(., vcov = sandwich::sandwich) %&gt;%
-  broom::tidy(conf.int = T) %&gt;%
-  remove_intercept() %&gt;%
+<div id="ordinal-logistic-regression" class="section level3">
+<h3>Ordinal Logistic Regression</h3>
+<pre class="r"><code>broom::tidy(MASS::polr(grade ~ trt.factor, trial, Hess = T), 
+            conf.int = T, exponentiate = T, p.values = T) %&gt;%
+  dplyr::filter(coef.type == &#39;coefficient&#39;) %&gt;%
   select(term, estimate, conf.low, conf.high, p.value) %&gt;%
-  dplyr::mutate_at(c(&#39;estimate&#39;, &#39;conf.low&#39;, &#39;conf.high&#39;), exp) %&gt;%
   as.data.frame() %&gt;%
-  condense_fit(estimate_name = &quot;RR (robust SE)&quot;)</code></pre>
-<pre><code>  explanatory            RR (robust SE)
-1   trtDrug B 1.09 (0.71-1.66, p=0.695)
-2         age 1.01 (1.00-1.03, p=0.089)
-3     gradeII 0.90 (0.53-1.52, p=0.686)
-4    gradeIII 1.01 (0.61-1.66, p=0.982)</code></pre>
-</div>
-<div id="cox-ph-regression-1" class="section level3">
-<h3>Cox PH Regression</h3>
-<pre class="r"><code>trial %&gt;% 
-  finalfit(&#39;Surv(ttdeath, death)&#39;, c(&#39;trt&#39;, &#39;age&#39;, &#39;grade&#39;), 
-           metrics = T) #equivalent: coxphuni(), coxphmulti()</code></pre>
-<pre><code>[[1]]
- Dependent: Surv(ttdeath, death)                   all
-          Chemotherapy Treatment    Drug A   98 (49.0)
-                                    Drug B  102 (51.0)
-                             Age Mean (SD) 47.2 (14.3)
-                           Grade         I   68 (34.0)
-                                        II   68 (34.0)
-                                       III   64 (32.0)
-          HR (univariable)        HR (multivariable)
-                         -                         -
- 1.25 (0.86-1.81, p=0.241) 1.30 (0.88-1.92, p=0.183)
- 1.01 (0.99-1.02, p=0.332) 1.01 (0.99-1.02, p=0.348)
-                         -                         -
- 1.28 (0.80-2.05, p=0.305) 1.21 (0.73-1.99, p=0.459)
- 1.69 (1.07-2.66, p=0.024) 1.79 (1.12-2.86, p=0.014)
-
-[[2]]
-                                                                                                                                                                                                                      
- Number in dataframe = 200, Number in model = 189, Missing = 11, Number of events = 103, Concordance = 0.589 (SE = 0.028), R-squared = 0.047( Max possible = 0.995), Likelihood ratio test = 9.136 (df = 4, p = 0.058)</code></pre>
+  condense_fit(estimate_name = &quot;OR&quot;)</code></pre>
+<pre><code>       explanatory                        OR
+1 trt.factorDrug B 1.10 (0.66-1.83, p=0.720)</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -2490,41 +2519,41 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] survival_3.7-0  finalfit_1.0.7  gtsummary_1.7.2 workflowr_1.7.1
+[1] finalfit_1.0.7  gtsummary_1.7.2 workflowr_1.7.1
 
 loaded via a namespace (and not attached):
  [1] tidyselect_1.2.1     dplyr_1.1.4          fastmap_1.2.0       
  [4] bayestestR_0.13.2    pROC_1.18.5          promises_1.3.0      
  [7] broom.helpers_1.15.0 labelled_2.13.0      digest_0.6.37       
-[10] rpart_4.1.23         lifecycle_1.0.4      processx_3.8.4      
-[13] magrittr_2.0.3       compiler_4.4.0       rlang_1.1.4         
-[16] sass_0.4.9           tools_4.4.0          utf8_1.2.4          
-[19] yaml_2.3.10          gt_0.10.1            knitr_1.48          
-[22] plyr_1.8.9           xml2_1.3.6           withr_3.0.1         
-[25] purrr_1.0.2          datawizard_0.11.0    nnet_7.3-19         
-[28] grid_4.4.0           fansi_1.0.6          git2r_0.33.0        
-[31] jomo_2.7-6           colorspace_2.1-1     mice_3.16.0         
-[34] ggplot2_3.5.1        scales_1.3.0         iterators_1.0.14    
-[37] MASS_7.3-60.2        insight_0.20.2       cli_3.6.3           
-[40] rmarkdown_2.28       generics_0.1.3       rstudioapi_0.16.0   
-[43] httr_1.4.7           parameters_0.22.0    commonmark_1.9.1    
-[46] minqa_1.2.8          cachem_1.1.0         stringr_1.5.1       
-[49] splines_4.4.0        vctrs_0.6.5          sandwich_3.1-0      
-[52] boot_1.3-30          glmnet_4.1-8         Matrix_1.7-0        
-[55] jsonlite_1.8.9       callr_3.7.6          hms_1.1.3           
-[58] mitml_0.4-5          foreach_1.5.2        tidyr_1.3.1         
-[61] jquerylib_0.1.4      glue_1.7.0           nloptr_2.0.3        
-[64] pan_1.9              codetools_0.2-20     ps_1.7.6            
-[67] stringi_1.8.4        shape_1.4.6.1        gtable_0.3.5        
-[70] later_1.3.2          lmtest_0.9-40        lme4_1.1-35.3       
-[73] munsell_0.5.1        tibble_3.2.1         pillar_1.9.0        
-[76] htmltools_0.5.8.1    R6_2.5.1             rprojroot_2.0.4     
-[79] evaluate_1.0.0       lattice_0.22-6       markdown_1.12       
-[82] haven_2.5.4          backports_1.5.0      broom_1.0.7         
-[85] httpuv_1.6.15        bslib_0.8.0          Rcpp_1.0.13         
-[88] nlme_3.1-164         whisker_0.4.1        xfun_0.47           
-[91] zoo_1.8-12           fs_1.6.4             forcats_1.0.0       
-[94] getPass_0.2-4        pkgconfig_2.0.3     </code></pre>
+[10] rpart_4.1.23         lifecycle_1.0.4      survival_3.7-0      
+[13] processx_3.8.4       magrittr_2.0.3       compiler_4.4.0      
+[16] rlang_1.1.4          sass_0.4.9           tools_4.4.0         
+[19] utf8_1.2.4           yaml_2.3.10          gt_0.10.1           
+[22] knitr_1.48           plyr_1.8.9           xml2_1.3.6          
+[25] withr_3.0.1          purrr_1.0.2          datawizard_0.11.0   
+[28] nnet_7.3-19          grid_4.4.0           fansi_1.0.6         
+[31] git2r_0.33.0         jomo_2.7-6           colorspace_2.1-1    
+[34] mice_3.16.0          ggplot2_3.5.1        scales_1.3.0        
+[37] iterators_1.0.14     MASS_7.3-60.2        insight_0.20.2      
+[40] cli_3.6.3            rmarkdown_2.28       generics_0.1.3      
+[43] rstudioapi_0.16.0    httr_1.4.7           parameters_0.22.0   
+[46] commonmark_1.9.1     minqa_1.2.8          cachem_1.1.0        
+[49] stringr_1.5.1        splines_4.4.0        vctrs_0.6.5         
+[52] sandwich_3.1-0       boot_1.3-30          glmnet_4.1-8        
+[55] Matrix_1.7-0         jsonlite_1.8.9       callr_3.7.6         
+[58] hms_1.1.3            mitml_0.4-5          foreach_1.5.2       
+[61] tidyr_1.3.1          jquerylib_0.1.4      glue_1.7.0          
+[64] nloptr_2.0.3         pan_1.9              codetools_0.2-20    
+[67] ps_1.7.6             stringi_1.8.4        shape_1.4.6.1       
+[70] gtable_0.3.5         later_1.3.2          lmtest_0.9-40       
+[73] lme4_1.1-35.3        munsell_0.5.1        tibble_3.2.1        
+[76] pillar_1.9.0         htmltools_0.5.8.1    R6_2.5.1            
+[79] rprojroot_2.0.4      evaluate_1.0.0       lattice_0.22-6      
+[82] markdown_1.12        haven_2.5.4          backports_1.5.0     
+[85] broom_1.0.7          httpuv_1.6.15        bslib_0.8.0         
+[88] Rcpp_1.0.13          nlme_3.1-164         whisker_0.4.1       
+[91] xfun_0.47            zoo_1.8-12           fs_1.6.4            
+[94] forcats_1.0.0        getPass_0.2-4        pkgconfig_2.0.3     </code></pre>
 </div>
 </div>
 </div>
